@@ -10,18 +10,6 @@ using Verse.AI;
 
 namespace FewMoreTraits
 {
-    [DefOf]
-    public static class TraitDefOf
-    {
-        public static TraitDef Sehr_Veteran;
-        public static TraitDef Sehr_Clean;
-
-        static TraitDefOf()
-        {
-            DefOfHelper.EnsureInitializedInCtor(typeof(TraitDefOf));
-        }
-    }
-
     public class ThoughtWorker_IsCarryingMeleeWeapon : ThoughtWorker
     {
         protected override ThoughtState CurrentStateInternal(Pawn p)
@@ -34,7 +22,8 @@ namespace FewMoreTraits
     {
         protected override ThoughtState CurrentStateInternal(Pawn p)
         {
-            if (p.HasTrait(TraitDefOf.Sehr_Veteran))
+
+            if (p.HasTrait(FMTDefOf.Sehr_Veteran))
             {
                 return ThoughtState.ActiveDefault;
             }
@@ -43,14 +32,32 @@ namespace FewMoreTraits
         }
     }
 
+    public class ThoughtWorker_Swimming : ThoughtWorker
+    {
+        protected override ThoughtState CurrentStateInternal(Pawn p)
+        {
+            if (p.IsColonistPlayerControlled)
+            {
+                if (p.Position.GetTerrain(Find.CurrentMap).IsWater)
+                {
+                    p?.skills.Learn(FMTDefOf.FMT_Swimming, 10000);
+                    return ThoughtState.ActiveDefault;
+                }
+            }
+
+            return ThoughtState.Inactive;
+        }
+    }
+
     public class ThoughtWorker_PassionateCleaning : ThoughtWorker
     {
         protected override ThoughtState CurrentStateInternal(Pawn p)
         {
-            if (p.HasTrait(TraitDefOf.Sehr_Clean) && p.CurJobDef == JobDefOf.Clean)
+            if (p.HasTrait(FMTDefOf.Sehr_Clean) && p.CurJobDef == JobDefOf.Clean)
             {
                 return ThoughtState.ActiveDefault;
             }
+
             return ThoughtState.Inactive;
         }
     }
@@ -72,7 +79,7 @@ namespace FewMoreTraits
                 veteransWithoutRangedWeaponResult.Clear();
                 foreach (Pawn pawn in PawnsFinder.AllMaps_FreeColonistsSpawned)
                 {
-                    if (pawn.story.traits.HasTrait(TraitDefOf.Sehr_Veteran) && pawn.equipment.Primary != null && pawn.equipment.Primary.def.IsRangedWeapon != true)
+                    if (pawn.story.traits.HasTrait(FMTDefOf.Sehr_Veteran) && pawn.equipment.Primary != null && pawn.equipment.Primary.def.IsRangedWeapon != true)
                     {
                         veteransWithoutRangedWeaponResult.Add(pawn);
                     }

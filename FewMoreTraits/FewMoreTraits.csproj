@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="FewMoreTraits.cs" />
     <Compile Include="FewMoreTraitsUtils.cs" />
+    <Compile Include="FMTDefOf.cs" />
     <Compile Include="MentalStateWorker_PanicFreezing.cs" />
     <Compile Include="MentalState_PanicFreezing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
